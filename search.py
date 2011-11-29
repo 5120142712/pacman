@@ -173,6 +173,7 @@ def breadthFirstSearch(problem):
 def uniformCostSearch(problem):
   "Search the node of least total cost first. "
   "*** YOUR CODE HERE ***"
+  print "using my uniform cost!!"
   from game import Directions
   s = Directions.SOUTH
   w = Directions.WEST
@@ -225,7 +226,47 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
   "Search the node that has the lowest combined cost and heuristic first."
   "*** YOUR CODE HERE ***"
-  util.raiseNotDefined()
+  from game import Directions
+  s = Directions.SOUTH
+  w = Directions.WEST
+  n = Directions.NORTH
+  e = Directions.EAST
+  start = problem.getStartState()
+  if problem.isGoalState(start):
+    return []
+  from util import PriorityQueue
+  statesQueue = PriorityQueue()
+  statesQueue.push((start,[],0), 0)
+  exploredSet = set([start])
+  while not statesQueue.isEmpty():
+    tup1 = statesQueue.pop()
+    #print "tup1 is ", tup1
+    state = tup1[0]
+    path = tup1[1]
+    cost = tup1[2]
+    if problem.isGoalState(state):
+      return path
+    successors = problem.getSuccessors(state)
+    for succ in successors:
+      coor = succ[0]
+      move = succ[1]
+      stepCost = succ[2]
+      heuristicCost = heuristic(coor,problem)
+      totalCost = cost + stepCost
+      tempPath = list(path)
+      if not coor in exploredSet:
+        exploredSet.add(coor)
+        if move == 'North':
+          tempPath.append(n)
+        elif move == 'East':
+          tempPath.append(e)
+        elif move == 'South':
+          tempPath.append(s)
+        elif move == 'West':
+          tempPath.append(w)
+        statesQueue.push((coor,tempPath,totalCost), totalCost + heuristicCost)        
+  return []  
+  #util.raiseNotDefined()
     
   
 # Abbreviations
