@@ -268,6 +268,8 @@ class CornersProblem(search.SearchProblem):
     """
     Stores the walls, pacman's starting position and corners.
     """
+    print "the starting game state is ", startingGameState
+    self.startingGameState = startingGameState
     self.walls = startingGameState.getWalls()
     self.startingPosition = startingGameState.getPacmanPosition()
     top, right = self.walls.height-2, self.walls.width-2 
@@ -278,15 +280,26 @@ class CornersProblem(search.SearchProblem):
     self._expanded = 0 # Number of search nodes expanded
     
     "*** YOUR CODE HERE ***"
+    self.top = top
+    self.right = right
     
   def getStartState(self):
     "Returns the start state (in your state space, not the full Pacman state space)"
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    visitedCorners = {(1,1):False, (1,self.top):False, (self.right,1):False, (self.right,self.top):False}
+    start = (self.startingPosition,[],visitedCorners)
+    return start
+    #util.raiseNotDefined()
     
   def isGoalState(self, state):
     "Returns whether this search state is a goal state of the problem"
     "*** YOUR CODE HERE ***"
+    print "the state is ", state
+    visitedCorners = state[2]
+    for corner in self.corners:
+      if not visitedCorners[corner]:
+        return False
+    return True
     util.raiseNotDefined()
        
   def getSuccessors(self, state):
