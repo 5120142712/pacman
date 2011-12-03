@@ -109,7 +109,7 @@ def depthFirstSearch(problem):
     for succ in successors:
       coor = succ[0]
       move = succ[1]
-      cost = succ[2]
+      #cost = succ[2]
       tempPath = list(path)
       if not coor in exploredSet:
         exploredSet.add(coor)
@@ -136,11 +136,13 @@ def breadthFirstSearch(problem):
   n = Directions.NORTH
   e = Directions.EAST
   start = problem.getStartState()
+  print "the start state is ", start
   if problem.isGoalState(start):
     return []
   from util import Queue
   statesQueue = Queue()
   statesQueue.push((start,[]))
+  print "start is ", start
   exploredSet = set([start])
   while not statesQueue.isEmpty():
     tup1 = statesQueue.pop()
@@ -150,12 +152,12 @@ def breadthFirstSearch(problem):
       return path
     successors = problem.getSuccessors(state)
     for succ in successors:
-      coor = succ[0]
+      succState = succ[0]
       move = succ[1]
-      cost = succ[2]
+      #cost = succ[2]
       tempPath = list(path)
-      if not coor in exploredSet:
-        exploredSet.add(coor)
+      if not succState in exploredSet:
+        exploredSet.add(succState)
         if move == 'North':
           tempPath.append(n)
         elif move == 'East':
@@ -164,7 +166,7 @@ def breadthFirstSearch(problem):
           tempPath.append(s)
         elif move == 'West':
           tempPath.append(w)
-        statesQueue.push((coor,tempPath))        
+        statesQueue.push((succState,tempPath))        
   return []
     
     
