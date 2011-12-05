@@ -238,23 +238,20 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     return []
   from util import PriorityQueue
   statesQueue = PriorityQueue()
-  statesQueue.push((start,[],0), 0)
+  statesQueue.push((start,[]),0)
   exploredSet = set([start])
   while not statesQueue.isEmpty():
     tup1 = statesQueue.pop()
     #print "tup1 is ", tup1
     state = tup1[0]
     path = tup1[1]
-    cost = tup1[2]
     if problem.isGoalState(state):
       return path
     successors = problem.getSuccessors(state)
     for succ in successors:
       coor = succ[0]
       move = succ[1]
-      stepCost = succ[2]
       heuristicCost = heuristic(coor,problem)
-      totalCost = cost + stepCost
       tempPath = list(path)
       if not coor in exploredSet:
         exploredSet.add(coor)
@@ -266,7 +263,8 @@ def aStarSearch(problem, heuristic=nullHeuristic):
           tempPath.append(s)
         elif move == 'West':
           tempPath.append(w)
-        statesQueue.push((coor,tempPath,totalCost), totalCost + heuristicCost)        
+        totalCost = problem.getCostOfActions(tempPath) + heuristicCost
+        statesQueue.push((coor,tempPath), totalCost)        
   return []  
   #util.raiseNotDefined()
     

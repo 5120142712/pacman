@@ -327,13 +327,13 @@ class CornersProblem(search.SearchProblem):
       hitsWall = self.walls[nextx][nexty]
       if not hitsWall:
         if (nextx,nexty) in self.corners:
-          if nextx == 1 and nexty == 1:
+          if (nextx,nexty) == (1,1):
             visitedCorners = True, toVisit[1], toVisit[2], toVisit[3]
-          elif nextx == 1 and nexty == self.top:
+          elif (nextx,nexty) == (1,self.top):
             visitedCorners = toVisit[0], True, toVisit[2], toVisit[3]
-          elif nextx == self.right and nexty == 1:
+          elif (nextx,nexty) == (self.right,1):
             visitedCorners = toVisit[0], toVisit[1], True , toVisit[3]
-          elif nextx == self.right and nexty == self.top:
+          elif (nextx,nexty) == (self.right,self.top):
             visitedCorners = toVisit[0], toVisit[1], toVisit[2], True
           succ = ((nextx,nexty), visitedCorners),action
         else:
@@ -372,10 +372,28 @@ def cornersHeuristic(state, problem):
   """
   corners = problem.corners # These are the corner coordinates
   walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
-  print "for heuristic the corners are ", corners
   
   "*** YOUR CODE HERE ***"
-  return 0 # Default to trivial solution
+  coors = state[0]
+  visitedCorners = state[1]
+  top, right = problem.walls.height-2, problem.walls.width-2
+  from math import fabs
+  sum = 0
+  for corner in corners:
+    best = 0
+    if corner == (1,1):
+      visited = visitedCorners[0]
+    elif corner == (1,top):
+      visited = visitedCorners[1]
+    elif corner == (right,1):
+      visited = visitedCorners[2]
+    else:
+      visited = visitedCorners[3]
+    if not visited:
+      dist = sum + fabs(coors[0] - corner[0]) + fabs(coors[1] - corner[1])
+    
+  return sum # Default to trivial solution
+
 
 class AStarCornersAgent(SearchAgent):
   "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
@@ -392,6 +410,7 @@ class FoodSearchProblem:
     pacmanPosition: a tuple (x,y) of integers specifying Pacman's position
     foodGrid:       a Grid (see game.py) of either True or False, specifying remaining food 
   """
+  first = True
   def __init__(self, startingGameState):
     self.start = (startingGameState.getPacmanPosition(), startingGameState.getFood())
     self.walls = startingGameState.getWalls()
@@ -464,9 +483,21 @@ def foodHeuristic(state, problem):
     problem.heuristicInfo['wallCount'] = problem.walls.count()
   Subsequent calls to this heuristic can access problem.heuristicInfo['wallCount']
   """
+  if problem.first:
+    problem.first = False
+    problem.heuristicInfo['wallCount'] = problem.walls.count()
   position, foodGrid = state
   "*** YOUR CODE HERE ***"
-  return 0
+  #print "in position 4,3 food is ", foodGrid[4][3]
+  """sum = 0
+  x,y = position
+  sum = sum + foodGrid[x+1][y]
+  sum = sum + foodGrid[x-1][y]
+  sum = sum + foodGrid[x][y+1]
+  sum = sum + foodGrid[x][y-1]
+  
+  return foodGrid.count()"""
+
   
 class ClosestDotSearchAgent(SearchAgent):
   "Search for all food using a sequence of searches"
