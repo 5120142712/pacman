@@ -494,9 +494,9 @@ def foodHeuristic(state, problem):
   sum = sum + foodGrid[x+1][y]
   sum = sum + foodGrid[x-1][y]
   sum = sum + foodGrid[x][y+1]
-  sum = sum + foodGrid[x][y-1]
+  sum = sum + foodGrid[x][y-1]"""
   
-  return foodGrid.count()"""
+  return foodGrid.count()
 
   
 class ClosestDotSearchAgent(SearchAgent):
